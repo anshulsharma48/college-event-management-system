@@ -30,10 +30,11 @@ const Landing = () => {
           onClick={scrollToTop}
           className="text-2xl font-bold cursor-pointer"
         >
-          JIMS - Event Management System
+          JIMS - Event & Activity Management System
         </h1>
 
         <div className="flex gap-6 items-center">
+
 
           <button
             onClick={scrollToTop}
@@ -200,7 +201,7 @@ const Landing = () => {
           />
 
           <p className="text-lg font-semibold leading-relaxed text-gray-700">
-            Jagannath Institute of Management Sciences (JIMS) is a leading
+            Jagan Institute of Management Sciences (JIMS) is a leading
             educational institution known for excellence in management
             and technology education. The institute regularly organizes
             events, seminars, workshops and cultural activities to
