@@ -14,6 +14,7 @@ const Register = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ added
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,6 +22,8 @@ const Register = () => {
 
   const handleRegister = async () => {
     try {
+      setLoading(true); // ✅ start loader
+
       await api.post("/auth/register", form);
 
       setMessage("Account created successfully ✅");
@@ -28,13 +31,14 @@ const Register = () => {
       setTimeout(() => navigate("/login"), 1500);
     } catch {
       setMessage("Registration failed ❌");
+    } finally {
+      setLoading(false); // ✅ stop loader
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-700 relative">
 
-      {/* Home Button */}
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-6 text-white text-sm font-medium hover:text-yellow-300 transition"
@@ -42,7 +46,6 @@ const Register = () => {
         ← Home
       </button>
 
-      {/* Register Card */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -105,13 +108,22 @@ const Register = () => {
           </p>
         )}
 
+        {/* ✅ Updated Button */}
         <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
+          whileHover={{ scale: loading ? 1 : 1.04 }}
+          whileTap={{ scale: loading ? 1 : 0.96 }}
           onClick={handleRegister}
-          className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-md font-medium hover:bg-indigo-700 transition"
+          disabled={loading}
+          className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-md font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2 disabled:opacity-70"
         >
-          Sign Up
+          {loading ? (
+            <>
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              Creating account...
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </motion.button>
 
         <p className="text-sm text-gray-500 text-center mt-6">
@@ -125,7 +137,6 @@ const Register = () => {
         </p>
 
       </motion.div>
-
     </div>
   );
 };
