@@ -216,11 +216,9 @@ const Landing = () => {
       {/* Footer */}
       <div className="bg-black text-gray-300 py-6 text-center">
 
-        <p>© 2026 College Event Management System</p>
+        <p>© 2026 College Activity & Event Management System</p>
 
-        {/* <p className="text-sm mt-1">
-          Developed by Anshul Sharma
-        </p> */}
+        
 
       </div>
 
