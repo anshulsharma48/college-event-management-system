@@ -8,7 +8,7 @@ const eventSchema = new mongoose.Schema({
   eligibility: String,
   status: {
     type: String,
-    default: "Pending"
+    default: "Approved"
   }
 })
 

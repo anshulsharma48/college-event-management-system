@@ -29,14 +29,14 @@ const Attendance = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div className="min-h-screen bg-gray-100 px-6 py-10">
 
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-1">
+      <div className="mb-10">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-2">
           Attendance Management
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-500">
           Mark attendance for registered students
         </p>
       </div>
@@ -62,12 +62,13 @@ const AttendanceCard = ({ reg, markPresent }) => {
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex justify-between items-center">
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-800">
+        <h3 className="text-lg font-semibold text-indigo-700">
           {reg.eventTitle}
         </h3>
 
+        {/* ✅ SAFE ACCESS */}
         <p className="text-sm text-gray-600">
-          User ID: {reg.userId}
+          👤 Student: {reg.userId?.name || "Unknown"}
         </p>
 
         <p className="text-sm mt-1">

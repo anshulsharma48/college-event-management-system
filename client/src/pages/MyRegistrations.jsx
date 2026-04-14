@@ -10,8 +10,10 @@ const MyRegistrations = () => {
     try {
       const res = await api.get("/registrations");
 
-      // Filter only this student
-      const myRegs = res.data.filter((reg) => reg.userId === userId);
+      // ✅ Correct filtering
+      const myRegs = res.data.filter(
+        (reg) => reg.userId?._id === userId
+      );
 
       setRegistrations(myRegs);
     } catch (err) {
@@ -68,21 +70,37 @@ const RegistrationCard = ({ reg, cancelRegistration }) => {
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex items-center justify-between">
 
+      {/* Left Content */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-indigo-700">
           {reg.eventTitle}
         </h2>
-        <p className="text-sm text-gray-500">
-          Registered Event
+
+        <p className="text-sm mt-1">
+          Status:{" "}
+          <span
+            className={`font-semibold ${
+              reg.attended ? "text-green-600" : "text-yellow-500"
+            }`}
+          >
+            {reg.attended ? "Completed" : "Registered"}
+          </span>
         </p>
       </div>
 
-      <button
-        onClick={() => cancelRegistration(reg._id)}
-        className="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition"
-      >
-        Cancel
-      </button>
+      {/* Right Action */}
+      {!reg.attended ? (
+        <button
+          onClick={() => cancelRegistration(reg._id)}
+          className="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition"
+        >
+          Cancel
+        </button>
+      ) : (
+        <span className="text-green-600 font-semibold text-sm">
+          Completed ✔
+        </span>
+      )}
 
     </div>
   );

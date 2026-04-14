@@ -59,13 +59,13 @@ const Navbar = () => {
           <NavLink to="/my-registrations" label="My Registrations" />
         )}
 
-        {(role === "Admin" || role === "Club Head") && (
+        {(role === "Admin" || role === "Club Head" || role ==="Faculty Coordinator") && (
           <NavLink to="/create-event" label="Create Event" />
         )}
 
-        {role === "Faculty Coordinator" && (
+        {/* {role === "Faculty Coordinator" && (
           <NavLink to="/approvals" label="Approvals" />
-        )}
+        )} */}
 
         {(role === "Admin" || role === "Student") && (
           <NavLink to="/certificate" label="Certificates" />

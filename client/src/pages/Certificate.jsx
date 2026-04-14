@@ -12,8 +12,11 @@ const Certificate = () => {
       try {
         const res = await api.get("/registrations");
 
+        // ✅ FIXED FILTER
         const filtered = res.data.filter(
-          (r) => r.userId === userId && r.attended === true
+          (r) =>
+            r.userId?._id === userId &&
+            r.attended === true
         );
 
         setCerts(filtered);
@@ -28,17 +31,11 @@ const Certificate = () => {
   const downloadPDF = (id) => {
     const element = document.getElementById(`cert-${id}`);
 
-    if (!element) {
-      alert("Certificate not ready ❌");
-      return;
-    }
-
     const printWindow = window.open("", "_blank");
 
     printWindow.document.write(`
       <html>
         <head>
-          <title>Certificate</title>
           <style>
             body{
               margin:0;
@@ -51,16 +48,33 @@ const Certificate = () => {
             }
 
             .cert{
-              border:10px solid #d4af37;
+              border:12px solid #d4af37;
               padding:60px;
               width:900px;
               text-align:center;
             }
 
-            h1{font-size:36px;margin-bottom:20px;}
-            h2{font-size:28px;margin:15px 0;}
-            h3{font-size:22px;margin-top:10px;}
+            .logo{
+              width:80px;
+              margin-bottom:10px;
+            }
+
+            h1{font-size:36px;}
+            h2{font-size:28px;color:#4f46e5;}
+            h3{font-size:22px;}
             p{font-size:18px;}
+
+            .footer{
+              margin-top:50px;
+              display:flex;
+              justify-content:space-between;
+            }
+
+            .line{
+              border-top:1px solid black;
+              width:200px;
+              margin-top:20px;
+            }
           </style>
         </head>
 
@@ -73,22 +87,19 @@ const Certificate = () => {
     `);
 
     printWindow.document.close();
-
-    setTimeout(() => {
-      printWindow.print();
-    }, 500);
+    setTimeout(() => printWindow.print(), 500);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-blue-100 px-6 py-10">
 
-      {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-1">
-          Certificates
+      {/* Header */}
+      <div className="mb-10 text-center">
+        <h1 className="text-3xl font-bold text-indigo-700">
+          🎓 Certificates
         </h1>
-        <p className="text-gray-600">
-          Download certificates for attended events
+        <p className="text-gray-600 mt-2">
+          Download your participation certificates
         </p>
       </div>
 
@@ -102,12 +113,21 @@ const Certificate = () => {
           {certs.map((c) => (
             <div key={c._id} className="flex flex-col items-center">
 
-              {/* Certificate */}
+              {/* 🎯 CERTIFICATE DESIGN */}
               <div
                 id={`cert-${c._id}`}
-                className="bg-white border-[8px] border-yellow-500 p-12 w-[900px] text-center shadow-md"
+                className="bg-white border-[12px] border-yellow-500 p-12 w-[900px] text-center shadow-2xl rounded-lg"
               >
-                <h1 className="text-3xl font-bold text-gray-800 mb-6">
+
+                {/* Logo */}
+                <img
+                  src="/logo.png"
+                  alt="logo"
+                  className="mx-auto mb-4 w-20"
+                />
+
+                {/* Title */}
+                <h1 className="text-4xl font-bold text-gray-800 mb-4">
                   Certificate of Participation
                 </h1>
 
@@ -127,15 +147,25 @@ const Certificate = () => {
                   {c.eventTitle}
                 </h3>
 
-                <p className="text-gray-500 mt-8 text-sm">
-                  College Event & Activity Management System
-                </p>
+                {/* Footer */}
+                <div className="flex justify-between mt-12 text-sm text-gray-600">
+                  <div>
+                    <div className="border-t border-gray-500 w-40 mx-auto"></div>
+                    <p className="mt-2">Faculty Coordinator</p>
+                  </div>
+
+                  <div>
+                    <div className="border-t border-gray-500 w-40 mx-auto"></div>
+                    <p className="mt-2">Director</p>
+                  </div>
+                </div>
+
               </div>
 
-              {/* Download Button */}
+              {/* Button */}
               <button
                 onClick={() => downloadPDF(c._id)}
-                className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md text-sm font-medium transition"
+                className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:from-indigo-700 hover:to-purple-700 transition"
               >
                 Download Certificate
               </button>

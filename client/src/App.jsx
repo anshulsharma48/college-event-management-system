@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard"
 import Events from "./pages/Events"
 import CreateEvent from "./pages/CreateEvent"
 import MyRegistrations from "./pages/MyRegistrations"
-import Approvals from "./pages/Approvals"
+
 import Attendance from "./pages/Attendance"
 import Certificate from "./pages/Certificate"
 import Reports from "./pages/Reports"
@@ -54,7 +54,7 @@ function App() {
         <Route
           path="/create-event"
           element={
-            <ProtectedRoute allowedRoles={["Admin","Club Head"]}>
+            <ProtectedRoute allowedRoles={["Admin","Club Head","Faculty Coordinator"]}>
               <CreateEvent />
             </ProtectedRoute>
           }
@@ -68,17 +68,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        <Route
-          path="/approvals"
-          element={
-            <ProtectedRoute allowedRoles={["Faculty Coordinator"]}>
-              <Approvals />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
+  <Route
           path="/attendance"
           element={
             <ProtectedRoute allowedRoles={["Admin"]}>
