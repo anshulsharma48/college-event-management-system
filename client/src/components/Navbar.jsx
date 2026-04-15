@@ -59,26 +59,25 @@ const Navbar = () => {
           <NavLink to="/my-registrations" label="My Registrations" />
         )}
 
-        {(role === "Admin" || role === "Club Head" || role ==="Faculty Coordinator") && (
+        {(role === "Admin" || role === "Club Head" || role === "Faculty Coordinator") && (
           <NavLink to="/create-event" label="Create Event" />
         )}
-
-        {/* {role === "Faculty Coordinator" && (
-          <NavLink to="/approvals" label="Approvals" />
-        )} */}
 
         {(role === "Admin" || role === "Student") && (
           <NavLink to="/certificate" label="Certificates" />
         )}
 
-        {role === "Admin" && (
-          <>
-            <NavLink to="/attendance" label="Attendance" />
-            <NavLink to="/reports" label="Reports" />
-          </>
+        {/* ✅ Attendance for Admin + Faculty */}
+        {(role === "Admin" || role === "Faculty Coordinator") && (
+          <NavLink to="/attendance" label="Attendance" />
         )}
 
-        {/* Notification Bell */}
+        {/* ✅ Reports only for Admin */}
+        {role === "Admin" && (
+          <NavLink to="/reports" label="Reports" />
+        )}
+
+        {/* 🔔 Notification Bell */}
         <div className="relative">
 
           <button

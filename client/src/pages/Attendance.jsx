@@ -3,30 +3,40 @@ import api from "../api/axios";
 
 const Attendance = () => {
   const [regs, setRegs] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState("");
 
-  const fetchRegs = async () => {
+  const fetchData = async () => {
     try {
-      const res = await api.get("/registrations");
-      setRegs(res.data);
+      const regRes = await api.get("/registrations");
+      const eventRes = await api.get("/events");
+
+      setRegs(regRes.data);
+      setEvents(eventRes.data);
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchRegs();
+    fetchData();
   }, []);
 
   const markPresent = async (id) => {
     try {
       await api.put(`/registrations/attendance/${id}`);
-      fetchRegs();
+      fetchData();
       alert("Attendance marked ✅");
     } catch (err) {
       console.error(err);
       alert("Error marking attendance ❌");
     }
   };
+
+  // ✅ FILTER LOGIC
+  const filteredRegs = selectedEvent
+    ? regs.filter((r) => r.eventId?._id === selectedEvent)
+    : regs;
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
@@ -41,14 +51,30 @@ const Attendance = () => {
         </p>
       </div>
 
-      {regs.length === 0 && (
+      {/* ✅ EVENT DROPDOWN */}
+      <div className="mb-6">
+        <select
+          value={selectedEvent}
+          onChange={(e) => setSelectedEvent(e.target.value)}
+          className="border border-gray-300 p-2 rounded-md"
+        >
+          <option value="">All Events</option>
+          {events.map((event) => (
+            <option key={event._id} value={event._id}>
+              {event.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {filteredRegs.length === 0 && (
         <p className="text-gray-500 text-center mt-10">
           No registrations found
         </p>
       )}
 
       <div className="space-y-4 max-w-3xl">
-        {regs.map((r) => (
+        {filteredRegs.map((r) => (
           <AttendanceCard key={r._id} reg={r} markPresent={markPresent} />
         ))}
       </div>
@@ -66,7 +92,6 @@ const AttendanceCard = ({ reg, markPresent }) => {
           {reg.eventTitle}
         </h3>
 
-        {/* ✅ SAFE ACCESS */}
         <p className="text-sm text-gray-600">
           👤 Student: {reg.userId?.name || "Unknown"}
         </p>
@@ -83,13 +108,17 @@ const AttendanceCard = ({ reg, markPresent }) => {
         </p>
       </div>
 
-      {!reg.attended && (
+      {!reg.attended ? (
         <button
           onClick={() => markPresent(reg._id)}
           className="bg-green-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-600 transition"
         >
           Mark Present
         </button>
+      ) : (
+        <span className="text-green-600 font-semibold text-sm">
+          Done ✔
+        </span>
       )}
 
     </div>
