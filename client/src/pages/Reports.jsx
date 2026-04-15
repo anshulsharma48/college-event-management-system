@@ -5,7 +5,6 @@ const Reports = () => {
   const [stats, setStats] = useState({
     events: 0,
     registrations: 0,
-    pending: 0,
     certificates: 0,
   });
 
@@ -13,17 +12,18 @@ const Reports = () => {
     const fetchStats = async () => {
       try {
         const eventsRes = await api.get("/events");
-        const pendingRes = await api.get("/events/pending");
         const regsRes = await api.get("/registrations");
 
-        const certificates = regsRes.data.filter((r) => r.attended).length;
+        const certificates = regsRes.data.filter(
+          (r) => r.attended === true
+        ).length;
 
         setStats({
           events: eventsRes.data.length,
           registrations: regsRes.data.length,
-          pending: pendingRes.data.length,
           certificates,
         });
+
       } catch (err) {
         console.log(err);
       }
@@ -46,10 +46,9 @@ const Reports = () => {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card title="Total Events" value={stats.events} color="indigo" />
         <Card title="Registrations" value={stats.registrations} color="blue" />
-        <Card title="Pending Approvals" value={stats.pending} color="yellow" />
         <Card title="Certificates Issued" value={stats.certificates} color="green" />
       </div>
 
@@ -61,7 +60,6 @@ const Card = ({ title, value, color }) => {
   const colors = {
     indigo: "bg-indigo-500",
     blue: "bg-blue-500",
-    yellow: "bg-yellow-500",
     green: "bg-green-500",
   };
 
@@ -70,9 +68,7 @@ const Card = ({ title, value, color }) => {
 
       <div className="flex items-center gap-4">
 
-        <div
-          className={`w-10 h-10 ${colors[color]} rounded-md`}
-        ></div>
+        <div className={`w-10 h-10 ${colors[color]} rounded-md`}></div>
 
         <div>
           <p className="text-sm text-gray-600">{title}</p>
