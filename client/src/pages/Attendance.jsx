@@ -33,13 +33,14 @@ const Attendance = () => {
     }
   };
 
-  // ✅ FILTER REGISTRATIONS
+  // FILTER
   const filteredRegs = selectedEvent
     ? regs.filter((r) => r.eventId?._id === selectedEvent)
     : regs;
 
-  // ✅ CURRENT EVENT TITLE
-  const selectedEventName = events.find(e => e._id === selectedEvent)?.title;
+  const selectedEventName = events.find(
+    (e) => e._id === selectedEvent
+  )?.title;
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
@@ -54,7 +55,7 @@ const Attendance = () => {
         </p>
       </div>
 
-      {/* ✅ EVENT DROPDOWN */}
+      {/* Dropdown */}
       <div className="mb-6 flex items-center gap-4">
         <select
           value={selectedEvent}
@@ -69,40 +70,48 @@ const Attendance = () => {
           ))}
         </select>
 
-        {/* ✅ COUNT */}
         <span className="text-sm text-gray-600">
           Total: {filteredRegs.length} registrations
         </span>
       </div>
 
-      {/* ✅ SELECTED EVENT TITLE */}
       {selectedEvent && (
         <h2 className="text-xl font-semibold text-indigo-700 mb-4">
           {selectedEventName}
         </h2>
       )}
 
-      {/* EMPTY */}
       {filteredRegs.length === 0 && (
         <p className="text-gray-500 text-center mt-10">
           No registrations found
         </p>
       )}
 
-      {/* LIST */}
       <div className="space-y-4 max-w-3xl">
-
         {filteredRegs.map((r) => (
-          <AttendanceCard key={r._id} reg={r} markPresent={markPresent} />
+          <AttendanceCard
+            key={r._id}
+            reg={r}
+            markPresent={markPresent}
+          />
         ))}
-
       </div>
-
     </div>
   );
 };
 
 const AttendanceCard = ({ reg, markPresent }) => {
+
+  // ✅ DATE LOGIC
+  const today = new Date();
+  const eventDate = new Date(reg.eventId?.date);
+
+  // normalize time (important)
+  today.setHours(0, 0, 0, 0);
+  eventDate.setHours(0, 0, 0, 0);
+
+  const canMark = eventDate <= today;
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex justify-between items-center">
 
@@ -127,13 +136,20 @@ const AttendanceCard = ({ reg, markPresent }) => {
         </p>
       </div>
 
+      {/* ✅ UPDATED BUTTON LOGIC */}
       {!reg.attended ? (
-        <button
-          onClick={() => markPresent(reg._id)}
-          className="bg-green-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-600 transition"
-        >
-          Mark Present
-        </button>
+        canMark ? (
+          <button
+            onClick={() => markPresent(reg._id)}
+            className="bg-green-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-600 transition"
+          >
+            Mark Present
+          </button>
+        ) : (
+          <span className="text-yellow-600 font-semibold text-sm">
+            Not Started ⏳
+          </span>
+        )
       ) : (
         <span className="text-green-600 font-semibold text-sm">
           Done ✔
