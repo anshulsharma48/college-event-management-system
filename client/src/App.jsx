@@ -2,7 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom"
 
 import Navbar from "./components/Navbar"
 import ProtectedRoute from "./components/ProtectedRoute"
-
+import AllRegistrations from "./pages/AllRegistrations"
 import Landing from "./pages/Landing"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
@@ -94,9 +94,13 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/all-registrations" element={<AllRegistrations />} />
+
 
         {/* fallback route */}
         <Route path="*" element={<Landing />} />
+
+
 
       </Routes>
     </>

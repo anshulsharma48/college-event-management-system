@@ -33,10 +33,13 @@ const Attendance = () => {
     }
   };
 
-  // ✅ FILTER LOGIC
+  // ✅ FILTER REGISTRATIONS
   const filteredRegs = selectedEvent
     ? regs.filter((r) => r.eventId?._id === selectedEvent)
     : regs;
+
+  // ✅ CURRENT EVENT TITLE
+  const selectedEventName = events.find(e => e._id === selectedEvent)?.title;
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
@@ -47,12 +50,12 @@ const Attendance = () => {
           Attendance Management
         </h1>
         <p className="text-gray-500">
-          Mark attendance for registered students
+          View and mark attendance event-wise
         </p>
       </div>
 
       {/* ✅ EVENT DROPDOWN */}
-      <div className="mb-6">
+      <div className="mb-6 flex items-center gap-4">
         <select
           value={selectedEvent}
           onChange={(e) => setSelectedEvent(e.target.value)}
@@ -65,18 +68,34 @@ const Attendance = () => {
             </option>
           ))}
         </select>
+
+        {/* ✅ COUNT */}
+        <span className="text-sm text-gray-600">
+          Total: {filteredRegs.length} registrations
+        </span>
       </div>
 
+      {/* ✅ SELECTED EVENT TITLE */}
+      {selectedEvent && (
+        <h2 className="text-xl font-semibold text-indigo-700 mb-4">
+          {selectedEventName}
+        </h2>
+      )}
+
+      {/* EMPTY */}
       {filteredRegs.length === 0 && (
         <p className="text-gray-500 text-center mt-10">
           No registrations found
         </p>
       )}
 
+      {/* LIST */}
       <div className="space-y-4 max-w-3xl">
+
         {filteredRegs.map((r) => (
           <AttendanceCard key={r._id} reg={r} markPresent={markPresent} />
         ))}
+
       </div>
 
     </div>

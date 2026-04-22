@@ -41,7 +41,7 @@ const getAllRegistrations = async (req, res) => {
   try {
     const regs = await Registration.find()
       .populate("userId", "name")
-      .populate("eventId", "title");
+      .populate("eventId", "title date");
 
     res.json(regs);
   } catch (err) {

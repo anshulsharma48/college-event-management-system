@@ -4,7 +4,7 @@ import api from "../api/axios";
 const Events = () => {
   const [events, setEvents] = useState([]);
 
-  const role = localStorage.getItem("role"); // ✅ ADDED
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -59,19 +59,21 @@ const Events = () => {
         </p>
       </div>
 
+      {/* Empty State */}
       {events.length === 0 && (
         <p className="text-gray-500 text-center mt-10">
           No events available
         </p>
       )}
 
+      {/* Events Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {events.map((event) => (
           <EventCard
             key={event._id}
             event={event}
             registerEvent={registerEvent}
-            role={role} // ✅ PASS ROLE
+            role={role}
           />
         ))}
       </div>
@@ -81,21 +83,39 @@ const Events = () => {
 };
 
 const EventCard = ({ event, registerEvent, role }) => {
+
+  const formattedDate = event.date
+    ? new Date(event.date).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "Date not available";
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg transition duration-300">
 
+      {/* Title */}
       <h3 className="text-xl font-semibold text-indigo-700 mb-3">
-        {event.title}
+        {event.title || "Untitled Event"}
       </h3>
 
+      {/* Details */}
       <div className="space-y-2 text-sm text-gray-600 mb-5">
-        <p>📅 {event.date}</p>
-        <p>📍 {event.venue}</p>
+        <p>📅 {formattedDate}</p>
+        <p>📍 {event.venue || "Venue not specified"}</p>
         <p>👥 Max: {event.maxParticipants || "N/A"}</p>
         <p>🎯 {event.eligibility || "All Students"}</p>
+
+        {/* ✅ DESCRIPTION */}
+        {event.description && (
+          <p className="text-sm text-gray-500 mt-2">
+            📝 {event.description}
+          </p>
+        )}
       </div>
 
-      {/* ✅ SHOW BUTTON ONLY FOR STUDENT */}
+      {/* ✅ REGISTER ONLY FOR STUDENT */}
       {role === "Student" && (
         <button
           onClick={() => registerEvent(event)}

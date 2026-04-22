@@ -12,14 +12,21 @@ const Certificate = () => {
       try {
         const res = await api.get("/registrations");
 
-        // ✅ FIXED FILTER
-        const filtered = res.data.filter(
-          (r) =>
+        const today = new Date();
+
+        // ✅ FILTER WITH DATE CHECK
+        const filtered = res.data.filter((r) => {
+          const eventDate = new Date(r.eventId?.date);
+
+          return (
             r.userId?._id === userId &&
-            r.attended === true
-        );
+            r.attended === true &&
+            eventDate <= today // 🔥 DATE VALIDATION
+          );
+        });
 
         setCerts(filtered);
+
       } catch (err) {
         console.log(err);
       }
@@ -93,7 +100,6 @@ const Certificate = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-blue-100 px-6 py-10">
 
-      {/* Header */}
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-bold text-indigo-700">
           🎓 Certificates
@@ -113,20 +119,17 @@ const Certificate = () => {
           {certs.map((c) => (
             <div key={c._id} className="flex flex-col items-center">
 
-              {/* 🎯 CERTIFICATE DESIGN */}
               <div
                 id={`cert-${c._id}`}
                 className="bg-white border-[12px] border-yellow-500 p-12 w-[900px] text-center shadow-2xl rounded-lg"
               >
 
-                {/* Logo */}
                 <img
                   src="/logo.png"
                   alt="logo"
                   className="mx-auto mb-4 w-20"
                 />
 
-                {/* Title */}
                 <h1 className="text-4xl font-bold text-gray-800 mb-4">
                   Certificate of Participation
                 </h1>
@@ -147,7 +150,6 @@ const Certificate = () => {
                   {c.eventTitle}
                 </h3>
 
-                {/* Footer */}
                 <div className="flex justify-between mt-12 text-sm text-gray-600">
                   <div>
                     <div className="border-t border-gray-500 w-40 mx-auto"></div>
@@ -162,7 +164,6 @@ const Certificate = () => {
 
               </div>
 
-              {/* Button */}
               <button
                 onClick={() => downloadPDF(c._id)}
                 className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:from-indigo-700 hover:to-purple-700 transition"

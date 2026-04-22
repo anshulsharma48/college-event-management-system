@@ -69,26 +69,35 @@ const Dashboard = () => {
           onClick={() => navigate("/events")}
         />
 
-        <StatCard
-          title="All Registrations"
-          value={stats.registrations}
-          color="bg-blue-500"
-          onClick={() => navigate("/my-registrations")}
-        />
+        {/* ❌ REMOVE for Student */}
+        {(role === "Admin" || role === "Faculty Coordinator") && (
+          <StatCard
+            title="All Registrations"
+            value={stats.registrations}
+            color="bg-blue-500"
+            onClick={() => navigate("/all-registrations")}
+          />
+        )}
 
-        <StatCard
-          title="My Registrations"
-          value={stats.myRegistrations}
-          color="bg-yellow-500"
-          onClick={() => navigate("/my-registrations")}
-        />
+        {/* ✅ ONLY STUDENT */}
+        {role === "Student" && (
+          <StatCard
+            title="My Registrations"
+            value={stats.myRegistrations}
+            color="bg-yellow-500"
+            onClick={() => navigate("/my-registrations")}
+          />
+        )}
 
-        <StatCard
-          title="My Certificates"
-          value={stats.certificates}
-          color="bg-green-500"
-          onClick={() => navigate("/certificate")}
-        />
+        {/* ✅ ONLY STUDENT */}
+        {role === "Student" && (
+          <StatCard
+            title="My Certificates"
+            value={stats.certificates}
+            color="bg-green-500"
+            onClick={() => navigate("/certificate")}
+          />
+        )}
 
       </div>
     </div>
