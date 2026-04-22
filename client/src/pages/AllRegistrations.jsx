@@ -99,9 +99,9 @@ const AllRegistrations = () => {
                 </p>
               </div>
 
-              <div className="text-sm text-gray-500">
+              {/* <div className="text-sm text-gray-500">
                 ID: {r._id.slice(-5)}
-              </div>
+              </div> */}
 
             </div>
           ))}
